@@ -2,49 +2,49 @@
 
 var puppeteer = require('puppeteer');
 
-var Launch = function Launch(options) {
+var _launch = function _launch(options) {
   return function () {
     return puppeteer.launch(options);
   };
 };
 
-var NewPage = function NewPage(browser) {
+var _newPage = function _newPage(browser) {
   return function () {
     return browser.newPage();
   };
 };
 
-var Goto = function Goto(page, url) {
+var _goto = function _goto(page, url) {
   return function () {
     return page["goto"](url);
   };
 };
 
-var WaitForSelector = function WaitForSelector(page, selector, options) {
+var _waitForSelector = function _waitForSelector(page, selector, options) {
   return function () {
     return page.waitForSelector(selector, options);
   };
 };
 
-var Typing = function Typing(page, selector, content, options) {
+var _type = function _type(page, selector, content, options) {
   return function () {
     return page.type(selector, content, options);
   };
 };
 
-var Click = function Click(page, selector) {
+var _click = function _click(page, selector) {
   return function () {
     return page.click(selector);
   };
 };
 
-var WaitForNavigation = function WaitForNavigation(page, options) {
+var _waitForNavigation = function _waitForNavigation(page, options) {
   return function () {
     return page.waitForNavigation(options);
   };
 };
 
-var Close = function Close(browser) {
+var _close = function _close(browser) {
   return function () {
     return browser.close();
   };
@@ -52,12 +52,12 @@ var Close = function Close(browser) {
 
 module.exports = {
   puppeteer: puppeteer,
-  callLaunch: Launch,
-  callNewPage: NewPage,
-  callGoto: Goto,
-  callWaitForSelector: WaitForSelector,
-  callType: Typing,
-  callClick: Click,
-  callWaitForNavigation: WaitForNavigation,
-  callClose: Close
+  _launch: _launch,
+  _newPage: _newPage,
+  _goto: _goto,
+  _waitForSelector: _waitForSelector,
+  _type: _type,
+  _c1ick: _click,
+  _waitForNavigation: _waitForNavigation,
+  _close: _close
 };

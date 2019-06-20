@@ -8,4 +8,8 @@ import Effect.Aff (launchAff_)
 
 main :: Effect Unit
 main = launchAff_ do
-       P.launch {}
+  browser <- P.launch { }
+  page <- P.newPage browser
+  P.goto page "https://google.com"
+  P.close browser
+
