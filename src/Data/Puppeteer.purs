@@ -18,12 +18,11 @@ foreign import _goto :: Page -> String -> Effect (Promise Unit)
 foreign import _close :: Browser -> Effect (Promise Unit)
 
 
-type LaunchOptions =
-  ( headless :: Boolean
-  )
+type Options =
+  { headless :: Boolean
+  }
 
-
-launch :: forall options. options -> Aff Browser
+launch :: Options -> Aff Browser
 launch options = do
   promise <- liftEffect (_launch options)
   Promise.toAff promise
@@ -41,5 +40,6 @@ goto page url = do
 
 close :: Browser -> Aff Unit
 close browser = do
+  Console.log "Closing browser"
   promise <- liftEffect (_close browser)
   Promise.toAff promise
