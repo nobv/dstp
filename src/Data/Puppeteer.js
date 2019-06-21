@@ -1,5 +1,10 @@
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports._close = exports._goto = exports._newPage = exports._launch = void 0;
+
 var puppeteer = require('puppeteer');
 
 var _launch = function _launch(options) {
@@ -8,41 +13,25 @@ var _launch = function _launch(options) {
   };
 };
 
+exports._launch = _launch;
+
 var _newPage = function _newPage(browser) {
   return function () {
     return browser.newPage();
   };
 };
 
-var _goto = function _goto(page, url) {
-  return function () {
-    return page["goto"](url);
+exports._newPage = _newPage;
+
+var _goto = function _goto(page) {
+  return function (url) {
+    return function () {
+      return page["goto"](url);
+    };
   };
 };
 
-var _waitForSelector = function _waitForSelector(page, selector, options) {
-  return function () {
-    return page.waitForSelector(selector, options);
-  };
-};
-
-var _type = function _type(page, selector, content, options) {
-  return function () {
-    return page.type(selector, content, options);
-  };
-};
-
-var _click = function _click(page, selector) {
-  return function () {
-    return page.click(selector);
-  };
-};
-
-var _waitForNavigation = function _waitForNavigation(page, options) {
-  return function () {
-    return page.waitForNavigation(options);
-  };
-};
+exports._goto = _goto;
 
 var _close = function _close(browser) {
   return function () {
@@ -50,14 +39,4 @@ var _close = function _close(browser) {
   };
 };
 
-module.exports = {
-  puppeteer: puppeteer,
-  _launch: _launch,
-  _newPage: _newPage,
-  _goto: _goto,
-  _waitForSelector: _waitForSelector,
-  _type: _type,
-  _c1ick: _click,
-  _waitForNavigation: _waitForNavigation,
-  _close: _close
-};
+exports._close = _close;

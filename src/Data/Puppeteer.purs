@@ -1,18 +1,17 @@
 module Data.Puppeteer where
 
-import Effect.Class (liftEffect)
 import Prelude
 
 import Control.Promise (Promise)
 import Control.Promise as Promise
 import Effect (Effect)
 import Effect.Aff (Aff)
+import Effect.Class (liftEffect)
+import Effect.Class.Console as Console
 
-foreign import data Puppeteer :: Type
 foreign import data Browser :: Type
 foreign import data Page :: Type
 
-foreign import puppeteer :: Puppeteer
 foreign import _launch :: forall options. options -> Effect (Promise Browser)
 foreign import _newPage :: Browser -> Effect (Promise Page)
 foreign import _goto :: Page -> String -> Effect (Promise Unit)

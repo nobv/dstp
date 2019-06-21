@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel lib -d src/Data"
+    "build": "babel lib -d src/Data && pulp build",
+    "run": "npm run build && pulp run"
   },
   "author": "",
   "license": "ISC",
@@ -19,7 +20,11 @@
     "@babel/plugin-transform-runtime": "^7.4.4",
     "@babel/preset-env": "^7.4.5",
     "@babel/runtime": "^7.4.5",
-    "babel-plugin-transform-async-functions": "^6.22.0"
+    "babel-plugin-transform-async-functions": "^6.22.0",
+    "psc-package": "^3.0.1",
+    "pulp": "^13.0.0",
+    "purescript": "^0.13.0",
+    "purescript-psa": "^0.7.3"
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
