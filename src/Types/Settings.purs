@@ -12,7 +12,7 @@ import Types.Options (Options)
 
 newtype Settings = Settings
   { options :: Maybe Options
-  , tasks :: Maybe Task
+  , tasks :: Maybe (Array Task)
   }
 
 derive instance genericSettings :: Generic Settings _

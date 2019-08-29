@@ -5,6 +5,7 @@ import Prelude
 import Data.Maybe (Maybe(..))
 import Data.Yaml as Y
 import Types.Dstp (Dstp)
+import Types.Options (Options)
 import Effect (Effect)
 import Effect.Aff (launchAff_)
 import Effect.Class.Console as Console

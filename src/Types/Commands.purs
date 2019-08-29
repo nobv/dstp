@@ -18,11 +18,11 @@ newtype Commands = Commands
   }
 
 newtype Goto = Goto
-  { url :: String
+  { path :: String
   }
 
 newtype Input = Input
-  { field :: Field
+  { fields :: Array Field
   }
 
 newtype Field = Field

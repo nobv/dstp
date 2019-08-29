@@ -3,13 +3,28 @@ dstp:
     headless: false
     sloMo: 250
   tasks:
-    name: test
+  - name: example task1
     baseUrl: https://example.com
     enabled: true
     commands:
       goto:
-        url: 'a'
+        path: login
       input:
-        field:
-          selector: b
-          value: a
+        fields:
+        - selector: "#mail"
+          value: "example@example.com"
+        - selector: "#password"
+          value: "password"
+  - name: example task2
+    baseUrl: https://example2.com
+    enabled: false
+    commands:
+      goto:
+        path: mypage
+      click:
+        selector: "#hobeBtn"
+      screenshot:
+        path: test.png
+      waitForSelector:
+        selector: "selector"
+
