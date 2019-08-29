@@ -18,7 +18,7 @@ main = do
   case config of
     Nothing -> Console.log "nothing"
     Just (c :: Dstp) -> do
-      Console.logShow c
+      Console.logShow c.options
 
 
 loadConfig :: String -> Effect (Maybe Dstp)
