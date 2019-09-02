@@ -7,9 +7,9 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel lib -d src/Libs && pulp build",
-    "run": "npm run build && pulp run"
+    "test": "spago test",
+    "build": "spago build",
+    "run": "spago run"
   },
   "author": "",
   "license": "ISC",

@@ -4,34 +4,27 @@ import Prelude
 
 import Data.Maybe (Maybe(..))
 import Data.Yaml as Y
-import Types.Dstp (Dstp)
-import Types.Options (Options)
+import Dstp.FS as FS
+import Dstp.Types (Settings)
 import Effect (Effect)
-import Effect.Aff (launchAff_)
 import Effect.Class.Console as Console
-import Libs.Fs as F
-import Libs.Puppeteer as P
+import Foreign.Generic (encodeJSON)
+import Unsafe.Coerce (unsafeCoerce)
 
-main :: _
+main :: Effect Unit
 main = do
-  yamlStr <- F.readFile "./config/config.yaml"
+  yamlStr <- FS.readFile "./config/config.yaml"
   config <- loadConfig yamlStr
+  Console.log $ unsafeCoerce config
   case config of
     Nothing -> Console.log "nothing"
-    Just (c :: Dstp) -> do
-      Console.logShow c
+    Just c -> do
+      Console.log $ encodeJSON c
 
 
-loadConfig :: String -> Effect (Maybe Dstp)
+loadConfig :: String -> Effect (Maybe { dstp :: Settings })
 loadConfig config = do
   Y.parseYaml config
-
-loadConfig' :: String -> Effect Unit
-loadConfig' config = do
-  maybeYaml <- Y.parseYaml config
-  case maybeYaml of
-    Nothing -> Console.log "can't load config file"
-    Just (yaml :: Dstp) -> Console.log $ show yaml
 
 -- launch :: Dstp.Settings -> Effect Unit
 -- launch options = launchAff_ do

@@ -1,4 +1,4 @@
-module Libs.Fs where
+module Dstp.FS where
 
 import Prelude
 

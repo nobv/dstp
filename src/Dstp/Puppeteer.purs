@@ -1,11 +1,10 @@
-module Libs.Puppeteer where
+module Dstp.Puppeteer where
 
 import Prelude
 
 import Control.Promise (Promise)
 import Control.Promise as Promise
-import Types.Options (Options)
-import Types.Commands as Commands
+import Dstp.Types (ScreenshotOptions, Options)
 import Effect.Aff (Aff)
 import Effect.Class (liftEffect)
 import Effect.Class.Console as Console
@@ -19,7 +18,7 @@ foreign import newPageImpl :: EffectFn1 Browser (Promise Page)
 foreign import gotoImpl :: EffectFn2 Page String (Promise Unit)
 foreign import closeImpl :: EffectFn1 Browser (Promise Unit)
 foreign import clickImpl :: EffectFn2 Page Selector (Promise Unit)
-foreign import screenshotImpl :: EffectFn2 Page Commands.Screenshot (Promise Unit)
+foreign import screenshotImpl :: EffectFn2 Page ScreenshotOptions (Promise Unit)
 foreign import submitImpl :: EffectFn2 Page Selector (Promise Unit)
 foreign import waitForNavigationImpl :: EffectFn1 Page (Promise Unit)
 foreign import waitForSelectorImpl :: EffectFn2 Page Selector (Promise Unit)
@@ -54,7 +53,7 @@ click page selector = do
   promise <- liftEffect (runEffectFn2 clickImpl page selector)
   Promise.toAff promise
 
-screenshot :: Page -> Commands.Screenshot -> Aff Unit
+screenshot :: Page -> ScreenshotOptions -> Aff Unit
 screenshot page option = do
   Console.log "screenshot"
   promise <- liftEffect (runEffectFn2 screenshotImpl page option)
