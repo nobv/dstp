@@ -21,7 +21,6 @@ main = do
     Just c -> do
       Console.log $ encodeJSON c.jobs
 
-
 loadConfig :: String -> Effect (Maybe Settings)
 loadConfig config = do
   Y.parseYaml config
