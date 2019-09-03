@@ -1,14 +1,15 @@
-dstp:
-  options:
-    headless: false
-    sloMo: 250
-  tasks:
-    name: test
+options:
+  headless: false
+  sloMo: 250
+jobs:
+  - name: example job
     baseUrl: https://example.com
     enabled: true
-    commands:
+    steps:
       - command: Goto
-        url: 'a'
+        name: go to login form
+        url: /login
       - command: SetInput
-        selector: b
-        value: a
+        name: input mail address
+        selector: "#mail"
+        value: example@example.com

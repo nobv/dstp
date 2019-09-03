@@ -19,10 +19,10 @@ main = do
   case config of
     Nothing -> Console.log "nothing"
     Just c -> do
-      Console.log $ encodeJSON c
+      Console.log $ encodeJSON c.jobs
 
 
-loadConfig :: String -> Effect (Maybe { dstp :: Settings })
+loadConfig :: String -> Effect (Maybe Settings)
 loadConfig config = do
   Y.parseYaml config
 

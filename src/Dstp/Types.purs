@@ -11,7 +11,7 @@ import Record as Record
 
 type Settings =
   { options :: Maybe Options
-  , tasks :: Maybe Task
+  , jobs :: Maybe (Array Jobs)
   }
 
 type Options =
@@ -19,27 +19,31 @@ type Options =
   , sloMo :: Maybe Number
   }
 
-type Task =
+type Jobs =
   { name :: String
   , baseUrl :: String
   , enabled :: Boolean
-  , commands :: Array Command
+  , steps :: Array Command
   }
 
 data Command
   = Goto
       { url :: String
+      , name :: Maybe String
       }
   | SetInput
       { selector :: String
       , value    :: String
+      , name :: Maybe String
       }
   | Click
       { selector :: String
+      , name :: Maybe String
       }
   | Screenshot ScreenshotOptions
   | WaitForSelector
       { selector :: String
+      , name :: Maybe String
       }
 
 type ScreenshotOptions =
