@@ -16,7 +16,7 @@ type Settings =
 
 type Options =
   { headless :: Maybe Boolean
-  , sloMo :: Maybe Number
+  , sloMo :: Maybe Int
   }
 
 type Jobs =
