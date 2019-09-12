@@ -4,16 +4,19 @@ import Prelude
 
 import Control.Promise (Promise)
 import Control.Promise as Promise
+import Data.Maybe (fromMaybe)
 import Dstp.Types (ScreenshotOptions, Options)
 import Effect.Aff (Aff)
 import Effect.Class (liftEffect)
 import Effect.Class.Console as Console
 import Effect.Uncurried (EffectFn1, EffectFn2, runEffectFn1, runEffectFn2)
+--import Unsafe.Coerce (unsafeCoerce)
+
 
 foreign import data Browser :: Type
 foreign import data Page :: Type
 
-foreign import launchImpl :: EffectFn1 Options (Promise Browser)
+foreign import launchImpl :: EffectFn1 OptionsDto (Promise Browser)
 foreign import newPageImpl :: EffectFn1 Browser (Promise Page)
 foreign import gotoImpl :: EffectFn2 Page String (Promise Unit)
 foreign import closeImpl :: EffectFn1 Browser (Promise Unit)
@@ -25,19 +28,31 @@ foreign import waitForSelectorImpl :: EffectFn2 Page Selector (Promise Unit)
 
 type Selector = String
 
+type OptionsDto =
+  { headless :: Boolean
+  , sloMo :: Int
+  }
+
+
 launch :: Options -> Aff Browser
 launch options = do
-  promise <- liftEffect (runEffectFn1 launchImpl options)
+  Console.logShow options
+  promise <- liftEffect (runEffectFn1 launchImpl { headless: fromMaybe true options.headless
+                                                 , sloMo: fromMaybe 0 options.sloMo
+                                                 })
   Promise.toAff promise
 
 
 newPage :: Browser -> Aff Page
 newPage browser = do
+  Console.log "new page"
   promise <- liftEffect (runEffectFn1 newPageImpl browser)
   Promise.toAff promise
 
+
 goto :: Page -> String -> Aff Unit
 goto page url = do
+  Console.log "goto"
   promise <- liftEffect (runEffectFn2 gotoImpl page url)
   Promise.toAff promise
 
