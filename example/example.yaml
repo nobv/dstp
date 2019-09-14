@@ -1,0 +1,25 @@
+options:
+  headless: true
+  sloMo: 250
+jobs:
+  - name: hoge fuga site scraiping
+    baseUrl: https://example.com
+    enabled: true
+    steps:
+      - command: Goto
+        discription: go to login form
+        url: https://amazon.com
+      - command: SetInput
+        discription: input mail address
+        selector: "#mail"
+        value: example@example.com
+      - command: SetInput
+        discription: input password
+        selector: "#passwored"
+        value: password
+      - command: Click
+        discription: login execution
+        selector: "#login"
+      - command: WaitForSelector
+        discription: wait for
+        selector: ""

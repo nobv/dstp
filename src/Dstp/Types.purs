@@ -29,21 +29,21 @@ type Job =
 data Command
   = Goto
       { url :: String
-      , name :: Maybe String
+      , discription :: Maybe String
       }
   | SetInput
       { selector :: String
       , value    :: String
-      , name :: Maybe String
+      , discription :: Maybe String
       }
   | Click
       { selector :: String
-      , name :: Maybe String
+      , discription :: Maybe String
       }
   | Screenshot ScreenshotOptions
   | WaitForSelector
       { selector :: String
-      , name :: Maybe String
+      , discription :: Maybe String
       }
 
 type ScreenshotOptions =
