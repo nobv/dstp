@@ -9,9 +9,9 @@ import Foreign.Generic (class Decode, class Encode, ForeignError(..), decode, en
 import Record as Record
 
 
-type Settings =
+type Config =
   { options :: Maybe Options
-  , jobs :: Maybe (Array Jobs)
+  , jobs :: Maybe (Array Job)
   }
 
 type Options =
@@ -19,7 +19,7 @@ type Options =
   , sloMo :: Maybe Int
   }
 
-type Jobs =
+type Job =
   { name :: String
   , baseUrl :: String
   , enabled :: Boolean
