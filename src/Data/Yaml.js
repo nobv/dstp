@@ -1,14 +1,5 @@
-'use strict';
+'use struct'
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.safeLoadImpl = void 0;
+const yaml = require('js-yaml');
 
-var yaml = require('js-yaml');
-
-var safeLoadImpl = function safeLoadImpl(target) {
-  return yaml.safeLoad(target);
-};
-
-exports.safeLoadImpl = safeLoadImpl;
+exports.safeLoadImpl = (target) => yaml.safeLoad(target);
