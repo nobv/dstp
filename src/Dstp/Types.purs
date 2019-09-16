@@ -29,22 +29,24 @@ type Job =
 data Command
   = Goto
       { url :: String
-      , discription :: Maybe String
+      , name :: Maybe String
       }
   | SetInput
       { selector :: String
       , value    :: String
-      , discription :: Maybe String
+      , name :: Maybe String
       }
   | Click
       { selector :: String
-      , discription :: Maybe String
+      , name :: Maybe String
       }
   | Screenshot ScreenshotOptions
   | WaitForSelector
       { selector :: String
-      , discription :: Maybe String
+      , name :: Maybe String
       }
+  | WaitForNavigation
+      {}
 
 type ScreenshotOptions =
   { path :: String
@@ -70,6 +72,7 @@ instance decodeCommand :: Decode Command where
           , encoding = fromMaybe "binary" opts.encoding
           }
       "WaitForSelector" -> WaitForSelector <$> decode cmd
+      "WaitForNavigation" -> WaitForNavigation <$> decode cmd
       _ -> throwError $ pure $ ForeignError $ "Unrecognised command: " <> command
 
 instance encodeCommand :: Encode Command where
@@ -78,3 +81,4 @@ instance encodeCommand :: Encode Command where
   encode (Click opts) = encode $ Record.insert (SProxy :: _ "command") "Click" opts
   encode (Screenshot opts) = encode $ Record.insert (SProxy :: _ "command") "Screenshot" opts
   encode (WaitForSelector opts) = encode $ Record.insert (SProxy :: _ "command") "WaitForSelector" opts
+  encode (WaitForNavigation opts) = encode $ Record.insert (SProxy :: _ "command") "WaitForNavigation" opts

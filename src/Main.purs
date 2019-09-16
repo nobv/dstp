@@ -37,46 +37,36 @@ main = do
 launch :: Options -> Array Job -> Effect Unit
 launch o j = launchAff_ do
   browser <- P.launch o
-  liftEffect $ doJobs browser j
-  pure $ P.close browser
+  liftEffect $ foreach browser doJob j
+  P.close browser
 
-doJobs :: P.Browser -> Array Job -> Effect Unit
-doJobs b jx
-  | null jx = Console.log "skip jobs"
+foreach :: forall p a. p -> (p -> a -> Effect Unit) -> Array a -> Effect Unit
+foreach p f a
+  | null a = Console.log "skip"
   | otherwise = do
-                Console.log "start jobs"
-                foreachE jx $ doJob b
-
+    Console.log "stat"
+    foreachE a $ f p
 
 doJob :: P.Browser -> Job -> Effect Unit
 doJob b j = do
   if j.enabled
      then launchAff_ do
-          Console.log $ encodeJSON j
           page <- P.newPage b
           P.goto page j.baseUrl
-          Console.log "after goto"
-          pure $ doSteps page j.steps
+          liftEffect $ foreach page doStep j.steps
      else
-          Console.log "unit"
+          Console.log "skip this job"
           -- pure unit
-
-
-doSteps :: P.Page -> Array Command -> Effect Unit
-doSteps p cs
-  | null cs = Console.log "skip steps"
-  | otherwise = do
-                Console.log "stat steps"
-                foreachE cs $ doStep p
 
 doStep :: P.Page -> Command -> Effect Unit
 doStep p c = do
   case c of
-    Goto cmd -> Console.logShow cmd
-    SetInput cmd -> Console.logShow cmd
-    Click cmd -> Console.logShow cmd
-    Screenshot cmd -> Console.logShow cmd
-    WaitForSelector cmd -> Console.logShow cmd
+    Goto cmd -> Console.log "goto"
+    SetInput cmd -> Console.log "input"
+    Click cmd -> Console.log "click"
+    Screenshot cmd -> Console.log "screenshot"
+    WaitForSelector cmd -> Console.log "selector"
+    WaitForNavigation cmd -> Console.log "navigation"
 
 
 loadConfig :: String -> Effect (Maybe Config)
