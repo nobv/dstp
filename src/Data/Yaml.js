@@ -2,4 +2,6 @@
 
 const yaml = require('js-yaml');
 
-exports.safeLoadImpl = (target) => yaml.safeLoad(target);
+exports.safeLoadImpl = function (target) {
+    yaml.safeLoad(target);
+};

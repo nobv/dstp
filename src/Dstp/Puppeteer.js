@@ -1,21 +1,37 @@
-'use struct'
+var puppeteer = require('puppeteer');
 
-const puppeteer = require('puppeteer');
+exports.launchImpl = function(options) {
+  return puppeteer.launch(options);
+};
 
-exports.launchImpl = (options) => puppeteer.launch(options);
+exports.newPageImpl = function(browser) {
+  return browser.newPage();
+};
 
-exports.newPageImpl = (browser) => browser.newPage();
+exports.gotoImpl = function(page, url) {
+  return page.goto(url);
+};
 
-exports.gotoImpl = (page, url) => page.goto(url);
+exports.closeImpl = function(browser) {
+  return browser.close();
+};
 
-exports.closeImpl = (browser) => browser.close();
+exports.clickImpl = function(page, selector) {
+  return page.click(selector);
+};
 
-exports.clickImpl = (page, selector) => page.click(selector);
+exports.screenshotImpl = function(page, options) {
+  return page.screenshot(options);
+};
 
-exports.screenshotImpl = (page, options) => page.screenshot(options);
+exports.submitImpl = function(page, selector) {
+  return page.evaluate("$(" + selector + ").parent('form').submit()");
+};
 
-exports.submitImpl = (page, selector) => page.evaluate("$(" + selector + ").parent('form').submit()");
+exports.waitForNavigationImpl = function(page) {
+  return page.waitForNavigation();
+};
 
-exports.waitForNavigationImpl = (page) => page.waitForNavigation();
-
-exports.waitForSelectorImpl = (page, selector) => page.waitForSelector(selector);
+exports.waitForSelectorImpl = function(page, selector) {
+  return page.waitForSelector(selector);
+};
