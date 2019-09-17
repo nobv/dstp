@@ -1,7 +1,5 @@
-'use struct'
+var yaml = require('js-yaml');
 
-const yaml = require('js-yaml');
-
-exports.safeLoadImpl = function (target) {
-    yaml.safeLoad(target);
+exports.safeLoadImpl = function(target) {
+  return yaml.safeLoad(target);
 };
