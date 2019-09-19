@@ -35,6 +35,7 @@ data Command
       { selector :: String
       , value    :: String
       , name :: Maybe String
+      , options :: Maybe InputOptions
       }
   | Click
       { selector :: String
@@ -55,6 +56,10 @@ type ScreenshotOptions =
   , fullPage :: Boolean
   , omitBackground :: Boolean
   , encoding :: String
+  }
+
+type InputOptions =
+  { delay :: Int
   }
 
 instance decodeCommand :: Decode Command where

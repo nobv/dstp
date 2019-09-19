@@ -5,11 +5,12 @@ import Prelude
 import Control.Promise (Promise)
 import Control.Promise as Promise
 import Data.Maybe (fromMaybe)
-import Dstp.Types (ScreenshotOptions, Options)
+import Dstp.Types (Options, ScreenshotOptions, InputOptions)
 import Effect.Aff (Aff)
 import Effect.Class (liftEffect)
 import Effect.Class.Console as Console
-import Effect.Uncurried (EffectFn1, EffectFn2, runEffectFn1, runEffectFn2)
+import Effect.Uncurried (EffectFn1, EffectFn2, EffectFn4, runEffectFn1, runEffectFn2, runEffectFn4)
+
 --import Unsafe.Coerce (unsafeCoerce)
 
 
@@ -25,6 +26,7 @@ foreign import screenshotImpl :: EffectFn2 Page ScreenshotOptions (Promise Unit)
 foreign import submitImpl :: EffectFn2 Page Selector (Promise Unit)
 foreign import waitForNavigationImpl :: EffectFn1 Page (Promise Unit)
 foreign import waitForSelectorImpl :: EffectFn2 Page Selector (Promise Unit)
+foreign import typeImpl :: EffectFn4 Page Selector String InputOptions (Promise Unit)
 
 type Selector = String
 
@@ -90,4 +92,10 @@ waitForSelector :: Page -> Selector -> Aff Unit
 waitForSelector page selector = do
   Console.log "waitForSelector"
   promise <- liftEffect (runEffectFn2 waitForSelectorImpl page selector)
+  Promise.toAff promise
+
+setInput :: Page -> Selector -> String -> InputOptions -> Aff Unit
+setInput page selector value opitons = do
+  Console.log "setInput"
+  promise <- liftEffect (runEffectFn4 typeImpl page selector value opitons)
   Promise.toAff promise
