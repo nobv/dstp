@@ -1,4 +1,4 @@
-var puppeteer = require('puppeteer');
+var puppeteer = require("puppeteer");
 
 exports.launchImpl = function(options) {
   return puppeteer.launch(options);
@@ -34,4 +34,8 @@ exports.waitForNavigationImpl = function(page) {
 
 exports.waitForSelectorImpl = function(page, selector) {
   return page.waitForSelector(selector);
+};
+
+exports.typeImpl = function(page, selector, text, options) {
+  return page.type(selector, text, options);
 };
