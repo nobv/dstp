@@ -48,6 +48,10 @@ data Command
       }
   | WaitForNavigation
       {}
+  | Submit
+      { name :: Maybe String
+      , selector :: String
+      }
 
 type ScreenshotOptions =
   { path :: String
@@ -78,6 +82,7 @@ instance decodeCommand :: Decode Command where
           }
       "WaitForSelector" -> WaitForSelector <$> decode cmd
       "WaitForNavigation" -> WaitForNavigation <$> decode cmd
+      "Submit" -> Submit <$> decode cmd
       _ -> throwError $ pure $ ForeignError $ "Unrecognised command: " <> command
 
 instance encodeCommand :: Encode Command where
@@ -87,3 +92,4 @@ instance encodeCommand :: Encode Command where
   encode (Screenshot opts) = encode $ Record.insert (SProxy :: _ "command") "Screenshot" opts
   encode (WaitForSelector opts) = encode $ Record.insert (SProxy :: _ "command") "WaitForSelector" opts
   encode (WaitForNavigation opts) = encode $ Record.insert (SProxy :: _ "command") "WaitForNavigation" opts
+  encode (Submit opts) = encode $ Record.insert (SProxy :: _ "command") "Submit" opts

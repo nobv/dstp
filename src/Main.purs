@@ -60,7 +60,7 @@ doStep :: String -> P.Page -> Command -> Effect Unit
 doStep s p c = launchAff_ do
   case c of
     Goto cmd -> do
-      P.goto p cmd.url
+      P.goto p $ s <> cmd.url
     SetInput cmd -> do
       P.setInput p cmd.selector cmd.value { delay: 0 }
     Click cmd -> do
@@ -71,6 +71,9 @@ doStep s p c = launchAff_ do
       P.waitForSelector p cmd.selector
     WaitForNavigation cmd -> do
       P.waitForNavigation p
+
+    Submit cmd -> do
+      P.submit p cmd.selector
 
 loadConfig :: String -> Effect (Maybe Config)
 loadConfig config = do
