@@ -59,29 +59,21 @@ doJob b j = do
 
 doStep :: String -> P.Page -> Command -> Effect Unit
 doStep s p c = launchAff_ do
-  Console.log $ encodeJSON c
   case c of
     Goto cmd -> do
-      _ <- P.goto p $ s <> cmd.url
-      pure unit
+      P.goto p $ s <> cmd.url
     SetInput cmd -> do
-      _ <- P.setInput p cmd.selector cmd.value $ fromMaybe { delay: 0 } cmd.options
-      pure unit
+      P.setInput p cmd.selector cmd.value $ fromMaybe { delay: 0 } cmd.options
     Click cmd -> do
-      _ <- P.click p cmd.selector
-      pure unit
+      P.click p cmd.selector
     Screenshot cmd -> do
-      _ <- P.screenshot p cmd
-      pure unit
+      P.screenshot p cmd
     WaitForSelector cmd -> do
-      _ <- P.waitForSelector p cmd.selector
-      pure unit
+      P.waitForSelector p cmd.selector
     WaitForNavigation cmd -> do
-      _ <- P.waitForNavigation p
-      pure unit
+      P.waitForNavigation p
     Submit cmd -> do
-      _ <- P.submit p cmd.selector
-      pure unit
+      P.submit p cmd.selector
 
 loadConfig :: String -> Effect (Maybe Config)
 loadConfig config = do

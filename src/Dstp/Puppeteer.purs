@@ -51,7 +51,6 @@ newPage browser = do
   promise <- liftEffect (runEffectFn1 newPageImpl browser)
   Promise.toAff promise
 
-
 goto :: Page -> String -> Aff Unit
 goto page url = do
   Console.log "goto"
@@ -90,12 +89,14 @@ waitForNavigation page = do
 
 waitForSelector :: Page -> Selector -> Aff Unit
 waitForSelector page selector = do
+  Console.log "waitForSelector"
   promise <- liftEffect (runEffectFn2 waitForSelectorImpl page selector)
   Promise.toAff promise
 
 setInput :: Page -> Selector -> String -> InputOptions -> Aff Unit
 setInput page selector value opitons = do
-  Console.log selector
+  Console.log "setInput"
   _ <- waitForSelector page selector
   promise <- liftEffect (runEffectFn4 typeImpl page selector value opitons)
+  Console.log "setInput after"
   Promise.toAff promise
