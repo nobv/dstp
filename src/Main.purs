@@ -1,10 +1,11 @@
 module Main where
 
 import Data.Foldable
+import Foreign.Generic
 import Prelude
 
 import Data.Array (null)
-import Data.Maybe (Maybe(..))
+import Data.Maybe (Maybe(..), fromMaybe)
 import Data.Yaml as Y
 import Dstp.FS as FS
 import Dstp.Puppeteer as P
@@ -58,22 +59,29 @@ doJob b j = do
 
 doStep :: String -> P.Page -> Command -> Effect Unit
 doStep s p c = launchAff_ do
+  Console.log $ encodeJSON c
   case c of
     Goto cmd -> do
-      P.goto p $ s <> cmd.url
+      _ <- P.goto p $ s <> cmd.url
+      pure unit
     SetInput cmd -> do
-      P.setInput p cmd.selector cmd.value { delay: 0 }
+      _ <- P.setInput p cmd.selector cmd.value $ fromMaybe { delay: 0 } cmd.options
+      pure unit
     Click cmd -> do
-      P.click p cmd.selector
+      _ <- P.click p cmd.selector
+      pure unit
     Screenshot cmd -> do
-      P.screenshot p cmd
+      _ <- P.screenshot p cmd
+      pure unit
     WaitForSelector cmd -> do
-      P.waitForSelector p cmd.selector
+      _ <- P.waitForSelector p cmd.selector
+      pure unit
     WaitForNavigation cmd -> do
-      P.waitForNavigation p
-
+      _ <- P.waitForNavigation p
+      pure unit
     Submit cmd -> do
-      P.submit p cmd.selector
+      _ <- P.submit p cmd.selector
+      pure unit
 
 loadConfig :: String -> Effect (Maybe Config)
 loadConfig config = do

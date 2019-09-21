@@ -90,12 +90,12 @@ waitForNavigation page = do
 
 waitForSelector :: Page -> Selector -> Aff Unit
 waitForSelector page selector = do
-  Console.log "waitForSelector"
   promise <- liftEffect (runEffectFn2 waitForSelectorImpl page selector)
   Promise.toAff promise
 
 setInput :: Page -> Selector -> String -> InputOptions -> Aff Unit
 setInput page selector value opitons = do
-  Console.log "setInput"
+  Console.log selector
+  _ <- waitForSelector page selector
   promise <- liftEffect (runEffectFn4 typeImpl page selector value opitons)
   Promise.toAff promise
