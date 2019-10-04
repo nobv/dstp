@@ -11,9 +11,11 @@ import Dstp.FS as FS
 import Dstp.Puppeteer as P
 import Dstp.Types (Command(..), Config, Job, Options)
 import Effect (Effect, foreachE)
-import Effect.Aff (launchAff_)
+import Effect.Aff (launchAff_, Aff)
 import Effect.Class (liftEffect)
 import Effect.Class.Console as Console
+import Control.Promise as Promise
+
 
 -- import Unsafe.Coerce (unsafeCoerce)
 
@@ -29,39 +31,44 @@ main = do
         Just o -> do
           case c.jobs of
             Nothing -> Console.log "not found jobs"
-            Just j -> do
+            Just j -> launchAff_  do
               launch o j
 
-launch :: Options -> Array Job -> Effect Unit
-launch o j = launchAff_ do
+launch :: Options -> Array Job -> Aff Unit
+launch o j = do
   browser <- P.launch o
-  liftEffect $ foreach browser doJob j
+  foreach browser doJob j
   -- P.close browser
-foreach :: forall p a. p -> (p -> a -> Effect Unit) -> Array a -> Effect Unit
-foreach p f a
-  | null a = Console.log "skip"
+
+foreach :: forall p a. p -> (p -> a -> Aff Unit) -> Array a -> Aff Unit
+foreach page func array
+  | null array = Console.log "skip"
   | otherwise = do
     Console.log "start"
-    foreachE a $ f p
+    for_ array \n -> do
+      func page n
+    -- promise <- liftEffect $ foreachE a $ f p
+    -- Promise.toAff promise
 
-doJob :: P.Browser -> Job -> Effect Unit
+
+doJob :: P.Browser -> Job -> Aff Unit
 doJob b j = do
   if j.enabled
-     then launchAff_ do
+     then do
           page <- P.newPage b
           P.goto page j.baseUrl
-          liftEffect $ foreach page (doStep j.baseUrl) j.steps
+          foreach page (doStep j.baseUrl) j.steps
      else
           Console.log "skip this job"
           -- pure unit
 
-doStep :: String -> P.Page -> Command -> Effect Unit
-doStep s p c = liftEffect do
-  launchAff_ case c of
+doStep :: String -> P.Page -> Command -> Aff Unit
+doStep s p c = do
+  case c of
     Goto cmd -> do
       P.goto p $ s <> cmd.url
     SetInput cmd -> do
-      _ <- P.waitForSelector p cmd.selector
+      P.waitForSelector p cmd.selector
       P.setInput p cmd.selector cmd.value $ fromMaybe { delay: 0 } cmd.options
     Click cmd -> do
       P.click p cmd.selector
