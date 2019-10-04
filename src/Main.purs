@@ -1,7 +1,6 @@
 module Main where
 
-import Data.Foldable
-import Foreign.Generic
+import Data.Foldable (for_)
 import Prelude
 
 import Data.Array (null)
@@ -10,21 +9,16 @@ import Data.Yaml as Y
 import Dstp.FS as FS
 import Dstp.Puppeteer as P
 import Dstp.Types (Command(..), Config, Job, Options)
-import Effect (Effect, foreachE)
+import Effect (Effect)
 import Effect.Aff (launchAff_, Aff)
-import Effect.Class (liftEffect)
 import Effect.Class.Console as Console
-import Control.Promise as Promise
-
-
--- import Unsafe.Coerce (unsafeCoerce)
 
 main :: Effect Unit
 main = do
   yamlStr <- FS.readFile "./example/example.yaml"
   config <- loadConfig yamlStr
   case config of
-    Nothing -> Console.log "nothing"
+    Nothing -> Console.log "not found config"
     Just c -> do
       case c.options of
         Nothing -> Console.log "not found options"
@@ -38,7 +32,7 @@ launch :: Options -> Array Job -> Aff Unit
 launch o j = do
   browser <- P.launch o
   foreach browser doJob j
-  -- P.close browser
+  P.close browser
 
 foreach :: forall p a. p -> (p -> a -> Aff Unit) -> Array a -> Aff Unit
 foreach page func array
@@ -47,9 +41,6 @@ foreach page func array
     Console.log "start"
     for_ array \n -> do
       func page n
-    -- promise <- liftEffect $ foreachE a $ f p
-    -- Promise.toAff promise
-
 
 doJob :: P.Browser -> Job -> Aff Unit
 doJob b j = do
@@ -71,6 +62,7 @@ doStep s p c = do
       P.waitForSelector p cmd.selector
       P.setInput p cmd.selector cmd.value $ fromMaybe { delay: 0 } cmd.options
     Click cmd -> do
+      P.waitForSelector p cmd.selector
       P.click p cmd.selector
     Screenshot cmd -> do
       P.screenshot p cmd
