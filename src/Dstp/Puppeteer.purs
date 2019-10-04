@@ -96,7 +96,5 @@ waitForSelector page selector = do
 setInput :: Page -> Selector -> String -> InputOptions -> Aff Unit
 setInput page selector value opitons = do
   Console.log "setInput"
-  _ <- waitForSelector page selector
   promise <- liftEffect (runEffectFn4 typeImpl page selector value opitons)
-  Console.log "setInput after"
   Promise.toAff promise

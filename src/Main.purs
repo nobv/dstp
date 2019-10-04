@@ -37,7 +37,6 @@ launch o j = launchAff_ do
   browser <- P.launch o
   liftEffect $ foreach browser doJob j
   -- P.close browser
-
 foreach :: forall p a. p -> (p -> a -> Effect Unit) -> Array a -> Effect Unit
 foreach p f a
   | null a = Console.log "skip"
@@ -56,13 +55,13 @@ doJob b j = do
           Console.log "skip this job"
           -- pure unit
 
-
 doStep :: String -> P.Page -> Command -> Effect Unit
-doStep s p c = launchAff_ do
-  case c of
+doStep s p c = liftEffect do
+  launchAff_ case c of
     Goto cmd -> do
       P.goto p $ s <> cmd.url
     SetInput cmd -> do
+      _ <- P.waitForSelector p cmd.selector
       P.setInput p cmd.selector cmd.value $ fromMaybe { delay: 0 } cmd.options
     Click cmd -> do
       P.click p cmd.selector
