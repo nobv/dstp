@@ -1,9 +1,10 @@
 module Main where
 
-import Data.Foldable (for_)
 import Prelude
 
-import Data.Array (null)
+import Data.Array (null, head)
+import Data.Either (Either(..))
+import Data.Foldable (for_)
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.Yaml as Y
 import Dstp.FS as FS
@@ -12,10 +13,27 @@ import Dstp.Types (Command(..), Config, Job, Options)
 import Effect (Effect)
 import Effect.Aff (launchAff_, Aff)
 import Effect.Class.Console as Console
+import Node.Yargs.Applicative (flag, yarg, runY)
+import Node.Yargs.Setup (example, usage)
+
 
 main :: Effect Unit
 main = do
-  yamlStr <- FS.readFile "./example/example.yaml"
+  let setup = usage "$0 -f path/to/your/config.yaml"
+              <> example "$0 -f ./example/example.yaml" ""
+
+  runY setup $ test <$> yarg "f" ["file"] (Just "Path to your configration") (Right "configration path is required") false
+                   <*> flag "h" ["headless"] (Just "Whether execute by headless mode or not")
+
+
+test :: Array String -> Boolean -> Effect Unit
+test [] _ = Console.log "empty"
+test xs _ = do
+    main' $ fromMaybe "" (head xs)
+
+main' :: String -> Effect Unit
+main' path = do
+  yamlStr <- FS.readFile path
   config <- loadConfig yamlStr
   case config of
     Nothing -> Console.log "not found config"
