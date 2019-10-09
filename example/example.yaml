@@ -1,6 +1,6 @@
 options:
   headless: true
-  sloMo: 250
+  slowMo: 250
 jobs:
   - name: hoge fuga site scraiping
     baseUrl: https://example.com

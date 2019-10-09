@@ -32,7 +32,7 @@ type Selector = String
 
 type OptionsDto =
   { headless :: Boolean
-  , sloMo :: Int
+  , slowMo :: Int
   }
 
 
@@ -40,7 +40,7 @@ launch :: Options -> Aff Browser
 launch options = do
   Console.logShow options
   promise <- liftEffect (runEffectFn1 launchImpl { headless: fromMaybe true options.headless
-                                                 , sloMo: fromMaybe 0 options.sloMo
+                                                 , slowMo: fromMaybe 0 options.slowMo
                                                  })
   Promise.toAff promise
 

@@ -16,7 +16,7 @@ type Config =
 
 type Options =
   { headless :: Maybe Boolean
-  , sloMo :: Maybe Int
+  , slowMo :: Maybe Int
   }
 
 type Job =
