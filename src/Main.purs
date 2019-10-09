@@ -24,12 +24,17 @@ main = do
 
   runY setup $ test <$> yarg "f" ["file"] (Just "Path to your configration") (Right "configration path is required") false
                    <*> flag "h" ["headless"] (Just "Whether execute by headless mode or not")
+                   <*> yarg "s" ["sloMo"] (Just "Slows down by the milliseconds") (Left 0) false
 
 
-test :: Array String -> Boolean -> Effect Unit
-test [] _ = Console.log "empty"
-test xs _ = do
-    main' $ fromMaybe "" (head xs)
+test :: Array String -> Boolean -> Int -> Effect Unit
+test [] _ _ = Console.log "empty"
+test xs a b = do
+  for_ xs \n -> do
+    Console.log $ "headless:" <> show a
+    Console.log $ "sloMo:" <> show b
+    Console.log n
+  main' $ fromMaybe "" (head xs)
 
 main' :: String -> Effect Unit
 main' path = do
