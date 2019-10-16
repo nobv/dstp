@@ -11,45 +11,42 @@ import Dstp.FS as FS
 import Dstp.Puppeteer as P
 import Dstp.Types (Command(..), Config, Job, Options)
 import Effect (Effect)
-import Effect.Aff (launchAff_, Aff)
+import Effect.Aff (Aff, launchAff_)
 import Effect.Class.Console as Console
 import Node.Yargs.Applicative (flag, yarg, runY)
 import Node.Yargs.Setup (example, usage)
 
+type Path = String
 
 main :: Effect Unit
 main = do
   let setup = usage "$0 -f path/to/your/config.yaml"
               <> example "$0 -f ./example/example.yaml" ""
 
-  runY setup $ test <$> yarg "f" ["file"] (Just "Path to your configration") (Right "configration path is required") false
+  runY setup $ app <$> yarg "f" ["file"] (Just "Path to your configration") (Right "configration path is required") false
                    <*> flag "h" ["headless"] (Just "Whether execute by headless mode or not")
                    <*> yarg "s" ["sloMo"] (Just "Slows down by the milliseconds") (Left 0) false
 
 
-test :: Array String -> Boolean -> Int -> Effect Unit
-test [] _ _ = Console.log "empty"
-test xs a b = do
-  for_ xs \n -> do
-    Console.log $ "headless:" <> show a
-    Console.log $ "sloMo:" <> show b
-    Console.log n
-  main' $ fromMaybe "" (head xs)
+app :: Array String -> Boolean -> Int -> Effect Unit
+app [] _ _ = Console.log "empty"
+app xs a b = do
+  mkConfig (fromMaybe "" (head xs)) (mkOptions a b)
 
-main' :: String -> Effect Unit
-main' path = do
+mkOptions :: Boolean -> Int -> Options
+mkOptions headless slowMo = do
+  { headless: Just headless
+  , slowMo: Just slowMo
+  }
+
+mkConfig :: Path -> Options -> Effect Unit
+mkConfig path options = do
   yamlStr <- FS.readFile path
   config <- loadConfig yamlStr
-  case config of
-    Nothing -> Console.log "not found config"
-    Just c -> do
-      case c.options of
-        Nothing -> Console.log "not found options"
-        Just o -> do
-          case c.jobs of
-            Nothing -> Console.log "not found jobs"
-            Just j -> launchAff_  do
-              launch o j
+  case (config >>= _.jobs) of
+    Nothing -> Console.log "config file or jobs section are required"
+    Just c -> launchAff_ do
+      launch options c
 
 launch :: Options -> Array Job -> Aff Unit
 launch o j = do

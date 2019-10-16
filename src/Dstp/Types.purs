@@ -10,8 +10,7 @@ import Record as Record
 
 
 type Config =
-  { options :: Maybe Options
-  , jobs :: Maybe (Array Job)
+  { jobs :: Maybe (Array Job)
   }
 
 type Options =
