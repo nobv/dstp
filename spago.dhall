@@ -13,6 +13,7 @@ You can edit this file as you like.
     , "foreign-generic"
     , "generics-rep"
     , "node-fs"
+    , "node-readline"
     , "prelude"
     , "psci-support"
     , "transformers"
