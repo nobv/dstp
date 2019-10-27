@@ -25,7 +25,7 @@ main = do
 
   runY setup $ app <$> yarg "f" ["file"] (Just "Path to your configration") (Right "configration path is required") false
                    <*> flag "h" ["headless"] (Just "Whether execute by headless mode or not")
-                   <*> yarg "s" ["sloMo"] (Just "Slows down by the milliseconds") (Left 0) false
+                   <*> yarg "s" ["slowMo"] (Just "Slows down by the milliseconds") (Left 0) false
 
 
 app :: Array String -> Boolean -> Int -> Effect Unit
