@@ -7,25 +7,37 @@ import Data.Either (Either(..))
 import Data.Foldable (for_)
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.Yaml as Y
+import Dotenv as Dotenv
 import Dstp.FS as FS
 import Dstp.Puppeteer as P
 import Dstp.Types (Command(..), Config, Job, Options)
 import Effect (Effect)
 import Effect.Aff (Aff, launchAff_)
+import Effect.Class (liftEffect)
+import Effect.Class.Console (logShow)
 import Effect.Class.Console as Console
+import Node.Process (lookupEnv)
 import Node.Yargs.Applicative (flag, yarg, runY)
 import Node.Yargs.Setup (example, usage)
 
+
 type Path = String
 
-main :: Effect Unit
-main = do
-  let setup = usage "$0 -f path/to/your/config.yaml"
-              <> example "$0 -f ./example/example.yaml" ""
+main::Effect Unit
+main = launchAff_ do
+  _ <- Dotenv.loadFile
+  liftEffect do
+    test <- lookupEnv "TEST_VER"
+    logShow test
 
-  runY setup $ app <$> yarg "f" ["file"] (Just "Path to your configration") (Right "configration path is required") false
-                   <*> flag "h" ["headless"] (Just "Whether execute by headless mode or not")
-                   <*> yarg "s" ["slowMo"] (Just "Slows down by the milliseconds") (Left 0) false
+-- main :: Effect Unit
+-- main = do
+--   let setup = usage "$0 -f path/to/your/config.yaml"
+--               <> example "$0 -f ./example/example.yaml" ""
+
+--   runY setup $ app <$> yarg "f" ["file"] (Just "Path to your configration") (Right "configration path is required") false
+--                    <*> flag "h" ["headless"] (Just "Whether execute by headless mode or not")
+--                    <*> yarg "s" ["slowMo"] (Just "Slows down by the milliseconds") (Left 0) false
 
 
 app :: Array String -> Boolean -> Int -> Effect Unit
