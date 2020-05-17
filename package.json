@@ -15,7 +15,6 @@
   "license": "ISC",
   "devDependencies": {
     "psc-package": "^4.0.1",
-    "pulp": "^14.0.0",
     "purescript": "^0.13.6",
     "purescript-psa": "^0.7.3"
   },
